@@ -7,8 +7,8 @@ import (
 )
 
 const (
-	histogramSql = `SELECT %s AS name, COUNT(*) FROM %s, UNNEST(%s) AS t(%s) GROUP BY %s ORDER BY count DESC;`
-	querySql     = `SELECT * FROM %s WHERE ? = ANY (%s);`
+	histogramSQL = `SELECT %s AS name, COUNT(*) FROM %s, UNNEST(%s) AS t(%s) GROUP BY %s ORDER BY count DESC;`
+	querySQL     = `SELECT * FROM %s WHERE ? = ANY (%s);`
 )
 
 type TagInfo struct {
@@ -17,7 +17,7 @@ type TagInfo struct {
 }
 
 func TagHistogramSQL(table, tags, tag string) string {
-	return fmt.Sprintf(histogramSql, tag, table, tags, tag, tag)
+	return fmt.Sprintf(histogramSQL, tag, table, tags, tag, tag)
 }
 
 func SelectTagHistogramResults(db *pg.DB, table, tags, tag string, res interface{}) error {
@@ -32,7 +32,7 @@ func SelectTagHistogram(db *pg.DB, table, tags, tag string) ([]TagInfo, error) {
 }
 
 func SelectArrayAny(db *pg.DB, table, arrayCol, arrayVar string, res interface{}) error {
-	stmt := fmt.Sprintf(querySql, table, arrayCol)
+	stmt := fmt.Sprintf(querySQL, table, arrayCol)
 	_, err := db.Query(res, stmt, arrayVar)
 	return err
 }
