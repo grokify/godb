@@ -2,7 +2,7 @@ module github.com/grokify/godb
 
 go 1.18
 
-require github.com/go-pg/pg/v10 v10.11.1
+require github.com/go-pg/pg/v10 v10.11.2
 
 require (
 	github.com/go-pg/zerochecker v0.2.0 // indirect
