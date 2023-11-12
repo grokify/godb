@@ -20,7 +20,7 @@ func TagHistogramSQL(table, tags, tag string) string {
 	return fmt.Sprintf(histogramSQL, tag, table, tags, tag, tag)
 }
 
-func SelectTagHistogramResults(db *pg.DB, table, tags, tag string, res interface{}) error {
+func SelectTagHistogramResults(db *pg.DB, table, tags, tag string, res any) error {
 	stmt := TagHistogramSQL(table, tags, tag)
 	_, err := db.Query(res, stmt)
 	return err
@@ -31,7 +31,7 @@ func SelectTagHistogram(db *pg.DB, table, tags, tag string) ([]TagInfo, error) {
 	return res, SelectTagHistogramResults(db, table, tags, tag, &res)
 }
 
-func SelectArrayAny(db *pg.DB, table, arrayCol, arrayVar string, res interface{}) error {
+func SelectArrayAny(db *pg.DB, table, arrayCol, arrayVar string, res any) error {
 	stmt := fmt.Sprintf(querySQL, table, arrayCol)
 	_, err := db.Query(res, stmt, arrayVar)
 	return err
