@@ -2,7 +2,7 @@ module github.com/grokify/godb
 
 go 1.18
 
-require github.com/go-pg/pg/v10 v10.12.0
+require github.com/go-pg/pg/v10 v10.13.0
 
 require (
 	github.com/go-pg/zerochecker v0.2.0 // indirect
@@ -12,7 +12,7 @@ require (
 	github.com/vmihailenco/msgpack/v5 v5.4.1 // indirect
 	github.com/vmihailenco/tagparser v0.1.2 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
-	golang.org/x/crypto v0.17.0 // indirect
-	golang.org/x/sys v0.15.0 // indirect
+	golang.org/x/crypto v0.21.0 // indirect
+	golang.org/x/sys v0.18.0 // indirect
 	mellium.im/sasl v0.3.1 // indirect
 )
