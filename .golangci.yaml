@@ -1,13 +1,20 @@
+version: "2"
+
+run:
+  tests: true
+
 linters:
   enable:
-    - dogsled
-    - dupl
-    - gofmt
-    - goimports
-    - gosec
+    - errcheck
+    - govet
+    - ineffassign
     - misspell
-    - nakedret
-    - stylecheck
+    - staticcheck
     - unconvert
     - unparam
-    - whitespace
+    - unused
+
+formatters:
+  enable:
+    - gofmt
+    - goimports
