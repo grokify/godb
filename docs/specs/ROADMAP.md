@@ -9,7 +9,7 @@ Phase status is derived from its items.
 - [x] `RMI-PGUTIL-003` SCRAM-SHA-256 verifiers
 - [x] `RMI-PGUTIL-004` Provisioning script and verification query for databases, owner and app roles, limits, timeouts and isolation, run as a non-superuser admin
 - [x] `RMI-PGUTIL-005` Integration test against a throwaway server
-- [ ] `RMI-PGUTIL-006` Release v0.2.0
+- [x] `RMI-PGUTIL-006` Release v0.2.0
 
 ## Phase 2: Application Migrations
 
