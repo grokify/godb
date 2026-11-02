@@ -112,7 +112,7 @@ func sitePlan(t *testing.T, prefix string) Plan {
 		{Name: prefix + "_auth", Owner: Role{Name: prefix + "_auth_owner", Verifier: verifier(t), ConnectionLimit: 10, StatementTimeout: "30s"}},
 		{Name: prefix, Owner: Role{Name: prefix + "_owner", Verifier: verifier(t)},
 			App: &Role{Name: prefix + "_app", Verifier: verifier(t), ConnectionLimit: 20, StatementTimeout: "30s", IdleInTransactionTimeout: "60s"}},
-	}, Lockdown: []string{"fleet"}}
+	}, Lockdown: []string{"fleet"}, Reachable: []string{"postgres", "template1"}}
 }
 
 func TestProvisionAgainstAServer(t *testing.T) {
@@ -131,12 +131,10 @@ func TestProvisionAgainstAServer(t *testing.T) {
 			t.Fatal(err)
 		}
 		// The server's own postgres and template1 are owned by the bootstrap
-		// superuser here, so the admin cannot lock them down; only those
-		// may be reported.
-		for _, problem := range strings.Split(strings.TrimSpace(s.psql(t, "admin", "fleet", q)), "\n") {
-			if problem != "" && !strings.Contains(problem, "database postgres") && !strings.Contains(problem, "database template1") {
-				t.Errorf("verify: %s", problem)
-			}
+		// superuser here, as a managed server's are by its provider, so the
+		// admin cannot lock them down: they are declared reachable.
+		if out := strings.TrimSpace(s.psql(t, "admin", "fleet", q)); out != "" {
+			t.Errorf("verify:\n%s", out)
 		}
 	}
 	// The boundary: a role reaches its own database only.

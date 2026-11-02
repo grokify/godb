@@ -62,13 +62,14 @@ func TestScript(t *testing.T) {
 
 func TestValidateRefuses(t *testing.T) {
 	cases := map[string]func(*Plan){
-		"no databases":       func(p *Plan) { p.Databases = nil },
-		"plain password":     func(p *Plan) { p.Databases[0].Owner.Verifier = "secret" },
-		"bad name":           func(p *Plan) { p.Databases[0].Name = "Shop-DB" },
-		"duplicate role":     func(p *Plan) { p.Databases[1].App.Name = "shop_owner" },
-		"bad timeout":        func(p *Plan) { p.Databases[1].App.StatementTimeout = "30 seconds" },
-		"negative limit":     func(p *Plan) { p.Databases[1].App.ConnectionLimit = -2 },
-		"locked and planned": func(p *Plan) { p.Lockdown = []string{"shop"} },
+		"no databases":         func(p *Plan) { p.Databases = nil },
+		"plain password":       func(p *Plan) { p.Databases[0].Owner.Verifier = "secret" },
+		"bad name":             func(p *Plan) { p.Databases[0].Name = "Shop-DB" },
+		"duplicate role":       func(p *Plan) { p.Databases[1].App.Name = "shop_owner" },
+		"bad timeout":          func(p *Plan) { p.Databases[1].App.StatementTimeout = "30 seconds" },
+		"negative limit":       func(p *Plan) { p.Databases[1].App.ConnectionLimit = -2 },
+		"locked and planned":   func(p *Plan) { p.Lockdown = []string{"shop"} },
+		"reachable and locked": func(p *Plan) { p.Reachable = []string{"postgres"} },
 	}
 	for name, change := range cases {
 		p := plan(t)
@@ -108,6 +109,10 @@ func TestVerifySQL(t *testing.T) {
 		if !strings.Contains(a, want) {
 			t.Errorf("VerifySQL lacks %q", want)
 		}
+	}
+	p.Reachable = []string{"template1"}
+	if c, err := p.VerifySQL(); err != nil || !strings.Contains(c, "d.datname NOT IN ('template1')") {
+		t.Errorf("reachable: %v", err)
 	}
 	if strings.Contains(a, "SCRAM") {
 		t.Error("VerifySQL contains a verifier")

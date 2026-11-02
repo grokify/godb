@@ -56,7 +56,8 @@ plan := provision.Plan{
         App: &provision.Role{Name: "shop_app", Verifier: appV,
             ConnectionLimit: 20, StatementTimeout: "30s", IdleInTransactionTimeout: "60s"},
     }},
-    Lockdown: []string{"postgres"},  // other databases no role should reach
+    Lockdown:  []string{"admin_db"},              // other databases no role should reach
+    Reachable: []string{"postgres", "template1"}, // owned by a managed server's provider: CONNECT stays, no data
 }
 
 script, err := plan.Script(provision.ScriptOptions{})  // run with psql as the server's admin

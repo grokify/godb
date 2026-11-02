@@ -67,6 +67,11 @@ type Plan struct {
 	// the admin to own them; one it does not own is left as it is, and
 	// VerifySQL reports any the roles can still reach.
 	Lockdown []string
+	// Reachable are databases any role may connect to, which VerifySQL
+	// does not report: on a managed server, template1 is owned by the
+	// provider and its PUBLIC CONNECT cannot be revoked. Connecting to it
+	// reaches no application's data.
+	Reachable []string
 }
 
 var durationPattern = regexp.MustCompile(`^[0-9]+(us|ms|s|min|h|d)?$`)
@@ -110,6 +115,14 @@ func (p Plan) Validate() error {
 		}
 		if slices.ContainsFunc(p.Databases, func(d Database) bool { return d.Name == l }) {
 			errs = append(errs, fmt.Errorf("provision: %s is both provisioned and locked down", l))
+		}
+	}
+	for _, r := range p.Reachable {
+		if err := pgutil.ValidIdent(r); err != nil {
+			errs = append(errs, fmt.Errorf("provision: reachable database: %w", err))
+		}
+		if slices.Contains(p.Lockdown, r) || slices.ContainsFunc(p.Databases, func(d Database) bool { return d.Name == r }) {
+			errs = append(errs, fmt.Errorf("provision: %s cannot be reachable and also provisioned or locked down", r))
 		}
 	}
 	return errors.Join(errs...)
@@ -209,7 +222,7 @@ func (p Plan) Script(o ScriptOptions) (string, error) {
 // security; that app roles cannot create roles or databases; each role's
 // connection limit and timeouts; that PUBLIC cannot connect to a planned
 // database; and that no planned role can connect to any database on the
-// server but its own.
+// server but its own, other than the plan's Reachable ones.
 func (p Plan) VerifySQL() (string, error) {
 	if err := p.Validate(); err != nil {
 		return "", err
@@ -261,6 +274,13 @@ func (p Plan) VerifySQL() (string, error) {
 		"JOIN pg_catalog.pg_roles r ON r.rolname = w.role " +
 		"CROSS JOIN pg_catalog.pg_database d " +
 		"WHERE d.datallowconn AND d.datname <> w.db AND pg_catalog.has_database_privilege(r.oid, d.oid, 'CONNECT')"
+	if len(p.Reachable) > 0 {
+		quoted := make([]string, len(p.Reachable))
+		for i, r := range p.Reachable {
+			quoted[i] = lit(r)
+		}
+		reach += " AND d.datname NOT IN (" + strings.Join(quoted, ", ") + ")"
+	}
 	parts = append(parts, reach)
 	return strings.Join(parts, "\nUNION ALL\n") + ";\n", nil
 }
