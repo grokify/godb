@@ -79,6 +79,11 @@ with PostgreSQL's own programs and provisions it as a non-superuser admin:
 PGUTIL_INTEGRATION=1 PGUTIL_PG_BIN=/usr/local/opt/postgresql@17/bin go test ./...
 ```
 
+## Changes
+
+See [CHANGELOG.md](CHANGELOG.md) and the [release notes](docs/releases/).
+Upgrading from `github.com/grokify/godb`: [v0.2.0](docs/releases/v0.2.0.md).
+
 ## License
 
 MIT

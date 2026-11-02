@@ -1,0 +1,271 @@
+{
+  "irVersion": "1.0",
+  "project": "pgutil",
+  "repository": "https://github.com/grokify/pgutil",
+  "versioning": "semver",
+  "commitConvention": "conventional",
+  "maintainers": [
+    "grokify",
+    "johncwang@gmail.com"
+  ],
+  "releases": [
+    {
+      "version": "v0.2.0",
+      "date": "2026-11-01",
+      "highlights": [
+        {
+          "description": "The module is `github.com/grokify/pgutil`, PostgreSQL only, and its root package needs no database driver"
+        },
+        {
+          "description": "`provision` writes an idempotent `psql` script that provisions databases with owner and app roles, connection limits, timeouts and per-database `CONNECT` isolation, run as a managed server's non-superuser admin, and a query that verifies the server against the plan"
+        },
+        {
+          "description": "`scram` makes SCRAM-SHA-256 verifiers, so a role's password never reaches the server in plain text"
+        }
+      ],
+      "breaking": [
+        {
+          "description": "The module path is `github.com/grokify/pgutil`, formerly `github.com/grokify/godb`; the go-pg helpers in `github.com/grokify/godb/pgutil` are now in `github.com/grokify/pgutil/gopg`",
+          "commit": "540677b",
+          "rmis": [
+            "RMI-PGUTIL-001"
+          ]
+        }
+      ],
+      "added": [
+        {
+          "description": "`ValidIdent`, `QuoteIdent` and `QuoteLiteral` for identifiers and literals",
+          "commit": "b7a06c7",
+          "rmis": [
+            "RMI-PGUTIL-002"
+          ]
+        },
+        {
+          "description": "`DSN`, `ParseDSN`, `WithDatabase` and `WithHost` for `postgres://` connection URLs",
+          "commit": "b7a06c7",
+          "rmis": [
+            "RMI-PGUTIL-002"
+          ]
+        },
+        {
+          "description": "`SQLState`, `IsUniqueViolation` and `IsInsufficientPrivilege`, reading any driver's SQLSTATE code without importing it",
+          "commit": "b7a06c7",
+          "rmis": [
+            "RMI-PGUTIL-002"
+          ]
+        },
+        {
+          "description": "`scram.Verifier`, `scram.VerifierWithSalt` and `scram.IsVerifier` for SCRAM-SHA-256 password verifiers as PostgreSQL stores them",
+          "commit": "18214ab",
+          "rmis": [
+            "RMI-PGUTIL-003"
+          ]
+        },
+        {
+          "description": "`provision.Plan` with `Script`, an idempotent `psql` script for databases, owner and app roles, limits, timeouts and `CONNECT` grants, with redaction of passwords for review, and `VerifySQL`, one row per difference from the plan",
+          "commit": "82c719b",
+          "rmis": [
+            "RMI-PGUTIL-004"
+          ]
+        },
+        {
+          "description": "`Plan.Reachable` names databases, such as a managed server's `template1`, that every role may reach without `VerifySQL` reporting it",
+          "commit": "559681e",
+          "rmis": [
+            "RMI-PGUTIL-004"
+          ]
+        }
+      ],
+      "deprecated": [
+        {
+          "description": "The `gopg` package, built on go-pg, which is in maintenance mode; it is kept for existing callers",
+          "commit": "540677b",
+          "rmis": [
+            "RMI-PGUTIL-001"
+          ]
+        }
+      ],
+      "fixed": [
+        {
+          "description": "`gopg.PgConn.Addr`'s JSON tag, misspelled `josn`, so the address is read from JSON",
+          "commit": "540677b"
+        }
+      ],
+      "tests": [
+        {
+          "description": "Unit tests for the helpers, verifiers and provisioning, and an opt-in integration test that provisions a throwaway PostgreSQL server as a non-superuser admin, checking idempotence, isolation, an owner resetting its app role's password, and drift",
+          "commit": "58140b0",
+          "rmis": [
+            "RMI-PGUTIL-005"
+          ]
+        }
+      ],
+      "infrastructure": [
+        {
+          "description": "CI, lint and CodeQL use the shared Go workflows, on the `main` branch",
+          "commit": "117c74d"
+        }
+      ],
+      "documentation": [
+        {
+          "description": "README, and product and technical requirements, plan and roadmap",
+          "commit": "a6f2938"
+        }
+      ],
+      "dependencies": [
+        {
+          "description": "go-pg v10.15.1, from v10.11.2",
+          "commit": "bd89f22"
+        },
+        {
+          "description": "go-pg v10.12.0",
+          "commit": "015f538"
+        },
+        {
+          "description": "go-pg v10.13.0",
+          "commit": "64f8728"
+        },
+        {
+          "description": "go-pg v10.14.0",
+          "commit": "f063284"
+        },
+        {
+          "description": "go-pg v10.15.0",
+          "commit": "006086d"
+        },
+        {
+          "description": "actions/setup-go v5",
+          "commit": "c1073ce"
+        },
+        {
+          "description": "actions/setup-go v6",
+          "commit": "4a0326b"
+        },
+        {
+          "description": "golangci/golangci-lint-action v4",
+          "commit": "a345368"
+        },
+        {
+          "description": "golangci/golangci-lint-action v6",
+          "commit": "6a2f455"
+        },
+        {
+          "description": "golangci/golangci-lint-action v9",
+          "commit": "746e250"
+        },
+        {
+          "description": "actions/checkout v6",
+          "commit": "fbf8c83"
+        }
+      ]
+    },
+    {
+      "version": "v0.1.1",
+      "date": "2023-11-12",
+      "highlights": [
+        {
+          "description": "Maintenance: `any` in place of `interface{}`, CI and lint, and go-pg v10.11.2"
+        }
+      ],
+      "changed": [
+        {
+          "description": "Signatures use `any` in place of `interface{}`",
+          "commit": "3ea8331"
+        }
+      ],
+      "infrastructure": [
+        {
+          "description": "Build and test workflow",
+          "commit": "a12a980"
+        },
+        {
+          "description": "golangci-lint configuration and fixes",
+          "commit": "85ff660"
+        },
+        {
+          "description": "Lint fixes",
+          "commit": "dd3a22f"
+        },
+        {
+          "description": "Dependabot for Go modules and GitHub Actions",
+          "commit": "87957ec"
+        },
+        {
+          "description": "Go 1.21 in the test matrix",
+          "commit": "407fb41"
+        },
+        {
+          "description": "golangci-lint updated",
+          "commit": "0bf707c"
+        }
+      ],
+      "documentation": [
+        {
+          "description": "MIT license",
+          "commit": "6b48fa3"
+        },
+        {
+          "description": "License years",
+          "commit": "ef0a4bb"
+        }
+      ],
+      "dependencies": [
+        {
+          "description": "go-pg v10.11.0",
+          "commit": "d8dcc79"
+        },
+        {
+          "description": "go-pg v10.11.2",
+          "commit": "0f3f73f"
+        },
+        {
+          "description": "Go modules updated",
+          "commit": "339f27e"
+        },
+        {
+          "description": "Go modules updated",
+          "commit": "f5dbc4a"
+        },
+        {
+          "description": "Go modules updated",
+          "commit": "28d21f2"
+        },
+        {
+          "description": "actions/setup-go v4",
+          "commit": "5f1b792"
+        },
+        {
+          "description": "actions/checkout v4",
+          "commit": "f2dc236"
+        }
+      ]
+    },
+    {
+      "version": "v0.1.0",
+      "date": "2022-01-31",
+      "highlights": [
+        {
+          "description": "PostgreSQL helpers on go-pg, moved from `github.com/grokify/mogo/database/pgutil`"
+        }
+      ],
+      "added": [
+        {
+          "description": "`PgConn`: connection settings from JSON, encoded as a connection string or as go-pg options, and a client",
+          "commit": "2930178"
+        },
+        {
+          "description": "`TagHistogramSQL`, `SelectTagHistogram` and `SelectTagHistogramResults`: counts of each tag in an array column",
+          "commit": "2930178"
+        },
+        {
+          "description": "`SelectArrayAny`: rows whose array column contains a value",
+          "commit": "2930178"
+        },
+        {
+          "description": "`ErrIsDuplicateKey` and `NilifyErrDuplicateKey` for unique-key violations",
+          "commit": "2930178"
+        }
+      ]
+    }
+  ]
+}
