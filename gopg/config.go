@@ -1,4 +1,11 @@
-package pgutil
+// Package gopg holds the module's earlier helpers, built on go-pg, which is
+// in maintenance mode: connection settings, tag histograms over array
+// columns, and duplicate-key errors.
+//
+// Deprecated: go-pg is in maintenance; new code uses the root package with
+// pgx or database/sql. This package is kept for existing callers and will
+// be removed in a later major version.
+package gopg
 
 import (
 	"encoding/json"
@@ -10,7 +17,7 @@ import (
 type PgConn struct {
 	Host     string
 	Port     string
-	Addr     string `josn:"Addr,omitempty"`
+	Addr     string `json:"Addr,omitempty"`
 	User     string `json:"User,omitempty"`
 	Password string `json:"Password,omitempty"`
 	Database string `json:"Database,omitempty"`

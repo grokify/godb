@@ -1,4 +1,4 @@
-package pgutil
+package gopg
 
 import (
 	"fmt"

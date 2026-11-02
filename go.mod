@@ -1,4 +1,4 @@
-module github.com/grokify/godb
+module github.com/grokify/pgutil
 
 go 1.26.0
 
