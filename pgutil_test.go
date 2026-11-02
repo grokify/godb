@@ -32,7 +32,7 @@ func TestIdentAndQuote(t *testing.T) {
 func TestDSN(t *testing.T) {
 	d := DSN{User: "shop_app", Password: "p@ss/w:rd", Host: "db.example.com", Database: "shop", SSLMode: "require"}
 	s := d.String()
-	if s != "postgres://shop_app:p%40ss%2Fw%3Ard@db.example.com:5432/shop?sslmode=require" {
+	if s != "postgres://shop_app:p%40ss%2Fw%3Ard@db.example.com:5432/shop?sslmode=require" { //nolint:gosec // G101: a made-up password in a test URL
 		t.Errorf("String = %s", s)
 	}
 	back, err := ParseDSN(s)
@@ -40,11 +40,11 @@ func TestDSN(t *testing.T) {
 		t.Errorf("ParseDSN = %+v, %v", back, err)
 	}
 	moved, err := WithHost(s, "db2.example.com", 0)
-	if err != nil || moved != "postgres://shop_app:p%40ss%2Fw%3Ard@db2.example.com:5432/shop?sslmode=require" {
+	if err != nil || moved != "postgres://shop_app:p%40ss%2Fw%3Ard@db2.example.com:5432/shop?sslmode=require" { //nolint:gosec // G101: a made-up password in a test URL
 		t.Errorf("WithHost = %s, %v", moved, err)
 	}
 	other, err := WithDatabase(s, "shop_auth")
-	if err != nil || other != "postgres://shop_app:p%40ss%2Fw%3Ard@db.example.com:5432/shop_auth?sslmode=require" {
+	if err != nil || other != "postgres://shop_app:p%40ss%2Fw%3Ard@db.example.com:5432/shop_auth?sslmode=require" { //nolint:gosec // G101: a made-up password in a test URL
 		t.Errorf("WithDatabase = %s, %v", other, err)
 	}
 	for _, f := range []func() error{

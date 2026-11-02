@@ -66,7 +66,7 @@ func newServer(t *testing.T) *server {
 
 func (s *server) run(t *testing.T, prog string, args ...string) {
 	t.Helper()
-	cmd := exec.Command(filepath.Join(s.bin, prog), args...)
+	cmd := exec.Command(filepath.Join(s.bin, prog), args...) //nolint:gosec // G204: PostgreSQL's own programs, from PGUTIL_PG_BIN or PATH
 	// The server refuses to start on macOS without a valid locale.
 	cmd.Env = append(os.Environ(), "LC_ALL=C")
 	var out bytes.Buffer
@@ -88,7 +88,7 @@ func (s *server) psql(t *testing.T, user, db, sql string) string {
 
 // try runs sql as user on db and returns the output and the error.
 func (s *server) try(user, db, sql string) (string, error) {
-	cmd := exec.Command(filepath.Join(s.bin, "psql"), "-X", "-q", "-A", "-t", "-v", "ON_ERROR_STOP=1",
+	cmd := exec.Command(filepath.Join(s.bin, "psql"), "-X", //nolint:gosec // G204: PostgreSQL's psql, from PGUTIL_PG_BIN or PATH "-q", "-A", "-t", "-v", "ON_ERROR_STOP=1",
 		"-h", s.sock, "-p", fmt.Sprint(s.port), "-U", user, "-d", db)
 	cmd.Stdin = strings.NewReader(sql)
 	var out bytes.Buffer
